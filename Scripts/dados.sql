@@ -33,6 +33,13 @@ INSERT INTO especialidade (nome, preco_base) VALUES
     ('Neurologia', 650.00),
     ('Cirurgia', 800.00);
 
+INSERT INTO especializacao (medico, especialidade) VALUES
+    ('11111111111', 'Cirurgia'),
+    ('33333333333', 'Neurologia'),
+    ('33333333333', 'Dermatologia'),
+    ('55555555555', 'Pediatria'),
+    ('55555555555', 'Cardiologia');
+
 INSERT INTO convenio (cnpj, nome, desconto) VALUES
     ('12121212121212', 'Amil', 0.15),
     ('34343434343434', 'Unimed', 0.20),
@@ -52,8 +59,11 @@ INSERT INTO conveniado (paciente, convenio) VALUES
 
 INSERT INTO consulta (paciente, medico, data_hora, preco, unidade) VALUES
     ('00000000000', '11111111111', TO_TIMESTAMP('10/12/2025 10:00', 'DD/MM/YYYY HH24:MI'), 500.00, '1234567'),
-    ('22222222222', '33333333333', TO_TIMESTAMP('11/12/2025 11:00', 'DD/MM/YYYY HH24:MI'), 300.00, '2345678'),
-    ('44444444444', '55555555555', TO_TIMESTAMP('12/12/2025 12:00', 'DD/MM/YYYY HH24:MI'), 700.00, '3456789');
+    ('00000000000', '33333333333', TO_TIMESTAMP('11/12/2025 14:00', 'DD/MM/YYYY HH24:MI'), 350.00, '2345678'),
+    ('22222222222', '33333333333', TO_TIMESTAMP('12/12/2025 11:00', 'DD/MM/YYYY HH24:MI'), 300.00, '2345678'),
+    ('22222222222', '11111111111', TO_TIMESTAMP('13/12/2025 11:15', 'DD/MM/YYYY HH24:MI'), 450.00, '1234567'),
+    ('44444444444', '55555555555', TO_TIMESTAMP('14/12/2025 12:00', 'DD/MM/YYYY HH24:MI'), 700.00, '3456789');
+
 
 INSERT INTO receita (paciente, medico, data_hora) VALUES
     ('00000000000', '11111111111', TO_TIMESTAMP('10/12/2025 10:00', 'DD/MM/YYYY HH24:MI')),

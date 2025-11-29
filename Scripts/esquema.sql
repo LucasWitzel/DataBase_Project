@@ -3,7 +3,7 @@ CREATE TABLE vinculo (
     vinculo VARCHAR(8) NOT NULL,
     
     CONSTRAINT pk_vinculo PRIMARY KEY (cpf, vinculo),
-  	CONSTRAINT ck_vinculo CHECK (vinculo IN ('PACIENTE','MEDICO')),
+    CONSTRAINT ck_vinculo CHECK (vinculo IN ('PACIENTE','MEDICO')),
 
     CONSTRAINT ck_vinculo_cpf CHECK (cpf ~ '^[0-9]{11}$')
 );
@@ -73,6 +73,15 @@ CREATE TABLE especialidade (
     CONSTRAINT pk_especialidade PRIMARY KEY (nome),
 
     CONSTRAINT ck_especialidade_preco CHECK (preco_base >= 0)
+);
+
+CREATE TABLE especializacao (
+    medico CHAR(11) NOT NULL,
+    especialidade VARCHAR(20) NOT NULL,
+
+    CONSTRAINT pk_especializacao PRIMARY KEY (medico, especialidade),
+    CONSTRAINT fk_especializacao_medico FOREIGN KEY (medico) REFERENCES medico(cpf) ON DELETE CASCADE,
+    CONSTRAINT fk_especializacao_especialidade FOREIGN KEY (especialidade) REFERENCES especialidade(nome) ON DELETE CASCADE
 );
 
 CREATE TABLE convenio (
