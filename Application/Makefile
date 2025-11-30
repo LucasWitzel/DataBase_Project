@@ -4,9 +4,9 @@ CXXFLAGS = -std=c++17 -Wall -Wextra -O2 -I.
 LDFLAGS = -lpqxx -lpq
 
 # Database credentials
-DATABASE = banco_de_dados
-USER = user
-PASSWORD = password
+DATABASE = projetobd
+USER = lucas
+PASSWORD = moulaga
 
 # Files
 SOURCES = interface.cpp operations.cpp tables.cpp
