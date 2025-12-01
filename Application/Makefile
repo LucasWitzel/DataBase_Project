@@ -15,6 +15,9 @@ OBJECTS = $(SOURCES:.cpp=.o)
 EXECUTABLE = app
 
 # Rules
+check: 
+	@systemctl status postgresql
+
 all: $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJECTS)

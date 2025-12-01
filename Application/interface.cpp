@@ -62,10 +62,10 @@ int main(int argc, char *argv[]) {
 
                 std::transform(operation.begin(), operation.end(), operation.begin(), [](unsigned char c) {return std::toupper(c);});
             }
-            std::cout << "Encerrando o programa. Obrigado por utilizar ConsultApp :)" << std::endl;
+            std::cout << "\nEncerrando o programa. Obrigado por utilizar ConsultApp :)" << std::endl;
         }
         else {
-            std::cout << "Não foi possível conectar ao banco de dados." << std::endl;
+            std::cout << "\nNão foi possível conectar ao banco de dados." << std::endl;
             return 1;
         }
     }
