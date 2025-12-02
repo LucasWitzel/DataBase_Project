@@ -46,7 +46,7 @@ bool registerOperation(pqxx::connection &connection) {
             unidade.insertData();
         }
         return true;
-    } 
+    }
     else {
         std::cout << "Opção inválida." << std::endl;
         return false;

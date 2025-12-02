@@ -13,7 +13,6 @@
 /**
  * @brief Paciente table.
 */
-
 class Paciente {
     private:
         pqxx::connection &connection; // Connection to the database
@@ -35,7 +34,7 @@ class Paciente {
         Paciente(pqxx::connection &connection);
 
         /**
-         * @brief Collects patient data.
+         * @brief Collects patient data from user.
         */
         bool inputData();
 

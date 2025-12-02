@@ -36,6 +36,7 @@ CREATE TABLE paciente (
         OR email ~ E'^[A-Za-z0-9._%+-]+@email\\.com$'
     )
 );
+
 -- Creating 'medico' table
 CREATE TABLE medico (
     cpf CHAR(11) NOT NULL,
@@ -87,13 +88,13 @@ CREATE TABLE especialidade (
     CONSTRAINT ck_especialidade_preco CHECK (preco_base >= 0)
 );
 
--- Creating 'residencia' table
-CREATE TABLE residencia (
+-- Creating 'especializacao' table
+CREATE TABLE especializacao (
     medico CHAR(11) NOT NULL,
-    especializacao VARCHAR(20) NOT NULL,
-    CONSTRAINT pk_residencia PRIMARY KEY (medico, especializacao),
-    CONSTRAINT fk_residencia_medico FOREIGN KEY (medico) REFERENCES medico(cpf) ON DELETE CASCADE,
-    CONSTRAINT fk_residencia_especializacao FOREIGN KEY (especializacao) REFERENCES especialidade(nome) ON DELETE CASCADE
+    especialidade VARCHAR(20) NOT NULL,
+    CONSTRAINT pk_especializacao PRIMARY KEY (medico, especialidade),
+    CONSTRAINT fk_especializacao_medico FOREIGN KEY (medico) REFERENCES medico(cpf) ON DELETE CASCADE,
+    CONSTRAINT fk_especializacao_especialidade FOREIGN KEY (especialidade) REFERENCES especialidade(nome) ON DELETE CASCADE
 );
 
 -- Creating 'convenio' table

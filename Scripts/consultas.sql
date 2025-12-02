@@ -1,14 +1,14 @@
 -- Consulta 1
 -- Seleciona para cada especialidade a quantidade de médicos, consultas e receita total.
-SELECT E.nome AS Especialidade,
-  COUNT(DISTINCT R.medico) AS Qtd_medicos,
+SELECT especialidade.nome AS Especialidade,
+  COUNT(DISTINCT especializacao.medico) AS Qtd_medicos,
   COUNT(C.paciente) AS Qtd_consultas,
   SUM(C.preco) AS Receita_total
-FROM especialidade E
-  JOIN residencia R ON E.nome = R.especializacao
-  JOIN medico M ON R.medico = M.cpf
+FROM especialidade
+  JOIN especializacao ON especialidade.nome = especializacao.especialidade
+  JOIN medico M ON especializacao.medico = M.cpf
   JOIN consulta C ON M.cpf = C.medico
-GROUP BY E.nome
+GROUP BY especialidade.nome
 HAVING COUNT (C.paciente) > 0
 ORDER BY Receita_total;
 
@@ -35,8 +35,7 @@ ORDER BY U.nome;
 
 -- Consulta 3
 -- Seleciona pacientes cuja última consulta foi com um médico que já havia os atendido antes.
-SELECT P.cpf,
-  P.nome
+SELECT P.cpf, P.nome
 FROM paciente P
 WHERE EXISTS (
     SELECT 1
@@ -59,37 +58,35 @@ WHERE EXISTS (
 -- Consulta 4
 -- Seleciona pacientes que fizeram pedidos de exame cuja média de preço (dos exames realizados) 
 -- eh maior que a média geral de preço de todos os exames.
-SELECT DISTINCT p.nome,
-  pe.tipo
-FROM paciente p
-  JOIN pedido_exame pe ON pe.paciente = p.cpf
-WHERE pe.tipo IN (
-    SELECT ped.tipo
-    FROM pedido_exame ped
-      JOIN exame e ON e.pedido = ped.id
-    GROUP BY ped.tipo
-    HAVING AVG(e.preco) > (
-        SELECT AVG(e2.preco)
-        FROM exame e2
+SELECT DISTINCT P.nome, PE1.tipo
+FROM paciente P
+  JOIN pedido_exame PE1 ON PE1.paciente = P.cpf
+WHERE PE1.tipo IN (
+    SELECT PE2.tipo
+    FROM pedido_exame PE2
+      JOIN exame EX1 ON EX1.pedido = PE2.id
+    GROUP BY PE2.tipo
+    HAVING AVG(EX1.preco) > (
+        SELECT AVG(EX2.preco)
+        FROM exame EX2
       )
   );
 
 -- Consulta 5
 -- Seleciona medicos que atendem em todas as unidades onde existam pacientes conveniados 
 -- aos mesmos convênios aos quais ele eh filiado.
-SELECT m.cpf,
-  m.nome
-FROM medico m
+SELECT M.crm, M.nome
+FROM medico M
 WHERE NOT EXISTS (
-    SELECT DISTINCT C_Alvo.unidade
-    FROM consulta C_Alvo
-      JOIN conveniado CV ON C_Alvo.paciente = CV.paciente
+    SELECT DISTINCT C.unidade
+    FROM consulta C
+      JOIN conveniado CV ON C.paciente = CV.paciente
       JOIN filiado F ON F.convenio = CV.convenio
-    WHERE F.medico = m.cpf
+    WHERE F.medico = M.cpf
       AND NOT EXISTS (
         SELECT 1
         FROM atendimento A
-        WHERE A.medico = m.cpf
-          AND A.unidade = C_Alvo.unidade
+        WHERE A.medico = M.cpf
+          AND A.unidade = C.unidade
       )
   );

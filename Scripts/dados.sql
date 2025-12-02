@@ -41,8 +41,8 @@ INSERT INTO especialidade (nome, preco_base) VALUES
     ('Neurologia', 650.00),
     ('Cirurgia', 800.00);
 
--- Inserting sample data into 'residencia' table
-INSERT INTO residencia (medico, especializacao) VALUES
+-- Inserting sample data into 'especializacao' table
+INSERT INTO especializacao (medico, especialidade) VALUES
     ('11111111111', 'Cirurgia'),
     ('33333333333', 'Neurologia'),
     ('55555555555', 'Pediatria'),
@@ -67,7 +67,8 @@ INSERT INTO filiado (medico, convenio) VALUES
 INSERT INTO conveniado (paciente, convenio) VALUES
     ('00000000000', '12121212121212'),
     ('00000000000', '89898989898989'),
-    ('22222222222', '34343434343434');
+    ('22222222222', '34343434343434'),
+    ('44444444444', '45454545454545');
 
 -- Inserting sample data into 'unidade' table
 INSERT INTO unidade (cnes, nome, tipo, telefone, cidade, rua, numero, cep) VALUES
@@ -79,10 +80,11 @@ INSERT INTO unidade (cnes, nome, tipo, telefone, cidade, rua, numero, cep) VALUE
 -- Inserting sample data into 'consulta' table
 INSERT INTO consulta (paciente, medico, data_hora, preco, unidade) VALUES
     ('00000000000', '11111111111', TO_TIMESTAMP('10/12/2025 10:00', 'DD/MM/YYYY HH24:MI'), 500.00, '1234567'),
-    ('00000000000', '11111111111', TO_TIMESTAMP('16/12/2025 09:30', 'DD/MM/YYYY HH24:MI'), 650.00, '1234567'),
+    ('00000000000', '77777777777', TO_TIMESTAMP('16/12/2025 09:30', 'DD/MM/YYYY HH24:MI'), 650.00, '1234567'),
     ('00000000000', '33333333333', TO_TIMESTAMP('11/12/2025 14:00', 'DD/MM/YYYY HH24:MI'), 350.00, '1234567'),
     ('22222222222', '33333333333', TO_TIMESTAMP('12/12/2025 11:00', 'DD/MM/YYYY HH24:MI'), 300.00, '1234567'),
     ('22222222222', '33333333333', TO_TIMESTAMP('20/12/2025 08:45', 'DD/MM/YYYY HH24:MI'), 550.00, '1234567'),
+    ('44444444444', '55555555555', TO_TIMESTAMP('21/12/2025 09:00', 'DD/MM/YYYY HH24:MI'), 300.00, '2345678'),
     ('44444444444', '55555555555', TO_TIMESTAMP('19/12/2025 17:00', 'DD/MM/YYYY HH24:MI'), 350.00, '3456789'),
     ('44444444444', '77777777777', TO_TIMESTAMP('14/12/2025 12:00', 'DD/MM/YYYY HH24:MI'), 700.00, '3456789'),
     ('44444444444', '99999999999', TO_TIMESTAMP('14/12/2025 12:00', 'DD/MM/YYYY HH24:MI'), 220.00, '3456789');

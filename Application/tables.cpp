@@ -13,26 +13,41 @@
 #include <limits>
 #include "tables.hpp"
 
-void getInputString(const std::string &question, std::string &answer) {
+/**
+ * @brief Gets a string input from the user.
+*/
+void getInputString(const std::string &question, std::string &answer, bool to_upper = true) {
     std::cout << question;
     std::getline(std::cin >> std::ws, answer);
-    std::transform(answer.begin(), answer.end(), answer.begin(), [](unsigned char c) {return std::toupper(c);});
+    if (to_upper) {
+        std::transform(answer.begin(), answer.end(), answer.begin(), [](unsigned char c) { return std::toupper(c);});
+    }
 }
 
+/**
+ * @brief Gets an integer input from the user.
+*/
 void getInputInt(const std::string &question, std::optional<int> &answer) {
     std::cout << question;
 
     if (int value; std::cin >> value) {
         answer = value;
-    } else {
+    } 
+    else {
         answer = std::nullopt;
         std::cin.clear();
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
 }
 
+/**
+ * @brief Paciente table.
+*/
 Paciente::Paciente(pqxx::connection &connection):connection(connection) {}
 
+/**
+ * @brief Collects patient data from user.
+*/
 bool Paciente::inputData() {
     bool valid_input = true;
 
@@ -43,8 +58,10 @@ bool Paciente::inputData() {
     getInputString("Digite o Sexo (M/F/O): ", this->sexo);
     getInputString("Digite o Celular (DD)NNNNNNNNN: ", this->celular);
     getInputString("Digite o Telefone Fixo (DD)NNNNNNNN: ", this->fixo);
-    getInputString("Digite o Email (usuario@email.com): ", this->email);
+    getInputString("Digite o Email (usuario@email.com): ", this->email, false);
     getInputString("Digite a Nacionalidade: ", this->nacionalidade);
+
+    std::cout << std::endl;
 
     // CPF
     if (!std::regex_match(this->cpf, std::regex("^[0-9]{11}$"))) {
@@ -98,7 +115,7 @@ bool Paciente::inputData() {
         (!std::regex_match(this->email,
                            std::regex("^[A-Za-z0-9._%+-]+@email\\.com$"))
          || this->email.size() > 40)) {
-        std::cerr << "Email inválido. Só são aceitos emails terminados em @email.com.\n";
+        std::cerr << "Email inválido. Só são aceitos emails terminados em @email.com\n";
         valid_input = false;
     }
 
@@ -111,12 +128,23 @@ bool Paciente::inputData() {
     return valid_input;
 }
 
+/**
+ * @brief Inserts patient data into the database.
+*/
 bool Paciente::insertData() {
-    std::string query;
+    std::string query_vinculo;
+    std::string query_paciente;
+
     try {
         pqxx::work transaction(this->connection);
-
-        query =
+    
+        query_vinculo =
+            "INSERT INTO vinculo (cpf, vinculo) VALUES ('" +
+            transaction.esc(this->cpf) + "', 'PACIENTE');";
+    
+        transaction.exec(query_vinculo);
+    
+        query_paciente =
             "INSERT INTO paciente (cpf, cns, nome, data_nasc, sexo, celular, fixo, email, nacionalidade) VALUES ('" +
             transaction.esc(this->cpf) + "', '" +
             transaction.esc(this->cns) + "', '" +
@@ -127,32 +155,41 @@ bool Paciente::insertData() {
             (this->fixo.empty() ? "NULL" : "'" + transaction.esc(this->fixo) + "'") + ", " +
             (this->email.empty() ? "NULL" : "'" + transaction.esc(this->email) + "'") + ", '" +
             transaction.esc(this->nacionalidade) + "');";
-
-        transaction.exec(query);
+    
+        transaction.exec(query_paciente);
+    
         transaction.commit();
-
+    
         std::cout << "Paciente cadastrado com sucesso.\n";
         return true;
-    } 
+    }
     catch (const std::exception &e) {
         std::cerr << "Erro ao inserir dados do paciente: " << e.what() << "\n";
         return false;
     }
 }
 
+/**
+ * @brief Unidade table.
+*/
 Unidade::Unidade(pqxx::connection &connection):connection(connection) {}
 
+/**
+ * @brief Collects unit data from user.
+*/
 bool Unidade::inputData() {
     bool valid_input = true;
 
     getInputString("Digite o CNES (7 dígitos): ", this->cnes);
     getInputString("Digite o Nome (Máx. 30 caracteres): ", this->nome);
-    getInputString("Digite o Tipo (Máx. 20 caracteres) - deixe vazio se não houver: ", this->tipo);
+    getInputString("Digite o Tipo (Máx. 20 caracteres): ", this->tipo);
     getInputString("Digite o Telefone (DD)NNNNNNNN: ", this->telefone);
     getInputString("Digite a Cidade: ", this->cidade);
     getInputString("Digite a Rua: ", this->rua);
     getInputInt("Digite o Número: ", this->numero);
     getInputString("Digite o CEP (8 dígitos): ", this->cep);
+
+    std::cout << std::endl;
 
     // CNES
     if (!std::regex_match(this->cnes, std::regex("^[0-9]{7}$"))) {
@@ -205,6 +242,9 @@ bool Unidade::inputData() {
     return valid_input;
 }
 
+/**
+ * @brief Inserts unit data into the database.
+*/
 bool Unidade::insertData() {
     std::string query;
     try {
